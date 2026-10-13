@@ -1,0 +1,23 @@
+{
+  "name": "collabsphere",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "seed": "node --env-file=.env.local scripts/seed.mjs"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^1.1.0",
+    "html5-qrcode": "^2.3.8",
+    "leaflet": "^1.9.4",
+    "mongoose": "^8.9.5",
+    "next": "^15.1.6",
+    "next-auth": "^5.0.0-beta.32",
+    "qrcode.react": "^4.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0"
+  }
+}
