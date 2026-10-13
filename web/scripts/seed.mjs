@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { User, Event, CheckIn } from '../lib/models.js';
 
-await mongoose.connect(process.env.MONGO_URI);
+await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, { dbName: process.env.MONGO_DB || 'collabsphere' });
 await Promise.all([User.deleteMany({}), Event.deleteMany({}), CheckIn.deleteMany({})]);
 
 const pt = (lng, lat) => ({ type: 'Point', coordinates: [lng, lat] });
