@@ -14,7 +14,8 @@ const TABS = ['approvals', 'events', 'members', 'check-ins'];
 
 export default async function AdminPage({ searchParams }) {
   const me = await getCurrentUser();
-  if (me?.role !== 'admin') redirect('/');
+  if (!me) redirect('/signin?callbackUrl=/admin');
+  if (me.role !== 'admin') redirect('/');
   const tab = TABS.includes((await searchParams).tab) ? (await searchParams).tab : 'approvals';
   await connectDB();
   await purgeOldSelfies();
@@ -80,10 +81,10 @@ export default async function AdminPage({ searchParams }) {
                   <td colSpan={6}>
                     <form action={adminUpdateEvent} className="inline-form">
                       <input type="hidden" name="id" value={String(e._id)} />
-                      <input name="title" defaultValue={e.title} aria-label="Title" />
+                      <input name="title" defaultValue={e.title} aria-label="Title" required />
                       <input name="venue" defaultValue={e.venue} aria-label="Venue" />
-                      <input type="datetime-local" name="startsAt" defaultValue={toISTInput(e.startsAt)} aria-label="Starts at" />
-                      <input type="number" name="points" defaultValue={e.points} aria-label="Points" className="narrow" />
+                      <input type="datetime-local" name="startsAt" defaultValue={toISTInput(e.startsAt)} aria-label="Starts at" required />
+                      <input type="number" name="points" defaultValue={e.points} aria-label="Points" className="narrow" min={0} max={100} />
                       <label className="chip"><input type="checkbox" name="requireFace" defaultChecked={e.requireFace} /> Face check</label>
                       <span>{e.rsvps.length} RSVPs</span>
                       <button>Save</button>

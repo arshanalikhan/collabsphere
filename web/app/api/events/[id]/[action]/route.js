@@ -9,7 +9,8 @@ export const GET = handle(async (_req, { params }) => {
   if (action !== 'qr') throw new HttpError(404, 'Not found');
   const user = await requireUser('coordinator', 'admin');
   const event = await Event.findById(id);
-  if (!event?.hostHouses.includes(user.house)) throw new HttpError(403, 'Not a host house');
+  if (!event) throw new HttpError(404, 'Not found');
+  if (!event.hostHouses.includes(user.house)) throw new HttpError(403, 'Not a host house');
   return Response.json({ token: makeQrToken(id) });
 });
 
@@ -18,7 +19,10 @@ export const POST = handle(async (_req, { params }) => {
   const { id, action } = await params;
   if (action === 'rsvp') {
     const user = await requireUser();
-    return Response.json(await Event.findByIdAndUpdate(id, { $addToSet: { rsvps: user._id } }, { new: true }));
+    // Only live events take RSVPs
+    const event = await Event.findOneAndUpdate({ _id: id, status: 'approved' }, { $addToSet: { rsvps: user._id } }, { new: true });
+    if (!event) throw new HttpError(404, 'Event not found or not open for RSVPs');
+    return Response.json(event);
   }
   const admin = await requireUser('admin');
   if (action === 'approve') return Response.json(await approveEvent(id, admin));

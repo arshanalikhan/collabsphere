@@ -42,10 +42,14 @@ export async function adminUpdateEvent(formData) {
   const admin = await requireUser('admin');
   const event = await Event.findById(formData.get('id'));
   if (!event?.hostHouses.includes(admin.house)) return;
-  event.title = formData.get('title');
+  // Blank or malformed fields keep their current value instead of failing the save
+  const title = formData.get('title')?.trim();
+  const startsAt = parseIST(formData.get('startsAt'));
+  const points = Number(formData.get('points'));
+  if (title) event.title = title;
   event.venue = formData.get('venue');
-  event.points = Number(formData.get('points'));
-  event.startsAt = parseIST(formData.get('startsAt'));
+  if (formData.get('points') !== '' && !isNaN(points)) event.points = Math.min(100, Math.max(0, points));
+  if (startsAt && !isNaN(startsAt)) event.startsAt = startsAt;
   event.requireFace = formData.get('requireFace') === 'on';
   await event.save();
   revalidatePath('/admin');

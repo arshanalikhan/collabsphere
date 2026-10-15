@@ -7,6 +7,7 @@ export const metadata = { title: 'Propose an event' };
 
 export default async function ProposePage() {
   const me = await getCurrentUser();
-  if (!me || me.role === 'member') redirect('/');
+  if (!me) redirect('/signin?callbackUrl=/propose');
+  if (me.role === 'member') redirect('/');
   return <ProposeForm houses={HOUSES.filter((h) => h !== me.house)} />;
 }
