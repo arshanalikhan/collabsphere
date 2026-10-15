@@ -8,7 +8,7 @@ const ERRORS = {
   Configuration: 'Sign-in is not configured yet. Ask an organiser.',
 };
 
-export const metadata = { title: 'Sign in · CollabSphere' };
+export const metadata = { title: 'Sign in' };
 
 export default async function SignInPage({ searchParams }) {
   const { error, callbackUrl } = await searchParams;

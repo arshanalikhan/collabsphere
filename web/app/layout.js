@@ -8,9 +8,12 @@ const display = Baloo_2({ subsets: ['latin'], weight: ['600', '700', '800'], var
 const body = Nunito({ subsets: ['latin'], weight: ['400', '600', '700', '800'], variable: '--font-body' });
 const hand = Gochi_Hand({ subsets: ['latin'], weight: '400', variable: '--font-hand' });
 
+const description = 'Find IITM BS peers near you, join cross-house meetups and earn points for your house.';
+
 export const metadata = {
-  title: 'CollabSphere · Saranda House',
-  description: 'Cross-house and regional meetup engine for IITM BS houses',
+  title: { default: 'CollabSphere · Saranda House', template: '%s · CollabSphere' },
+  description,
+  openGraph: { title: 'CollabSphere', description, siteName: 'CollabSphere', locale: 'en_IN', type: 'website' },
 };
 
 export const viewport = { themeColor: '#fff4df' };

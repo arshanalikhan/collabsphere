@@ -3,6 +3,7 @@ import { User } from '@/lib/models';
 import { HOUSES } from '@/lib/houses';
 
 export const dynamic = 'force-dynamic';
+export const metadata = { title: 'House leaderboard' };
 
 export default async function LeaderboardPage() {
   await connectDB();

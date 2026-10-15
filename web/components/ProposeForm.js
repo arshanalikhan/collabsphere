@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import LocationButton from './LocationButton';
 
 export default function ProposeForm({ houses }) {
   const router = useRouter();
@@ -17,17 +18,10 @@ export default function ProposeForm({ houses }) {
     setBusy(true);
     const res = await fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     setBusy(false);
-    if (!res.ok) return setErr((await res.json()).error);
-    router.push('/');
-    router.refresh();
-  };
-
-  const useMyLocation = (e) => {
-    const form = e.currentTarget.form;
-    navigator.geolocation.getCurrentPosition((p) => {
-      form.lat.value = p.coords.latitude.toFixed(5);
-      form.lng.value = p.coords.longitude.toFixed(5);
-    });
+    const data = await res.json();
+    if (!res.ok) return setErr(data.error);
+    // Land on the new event so the proposer sees which houses still need to approve
+    router.push(`/events/${data._id}`);
   };
 
   return (
@@ -46,12 +40,12 @@ export default function ProposeForm({ houses }) {
         <label>City<input name="city" required /></label>
         <label>Venue<input name="venue" /></label>
       </div>
-      <label>Starts at<input type="datetime-local" name="startsAt" required /></label>
+      <label>Starts at (IST)<input type="datetime-local" name="startsAt" required /></label>
       <div className="row">
         <label>Latitude<input name="lat" inputMode="decimal" required /></label>
         <label>Longitude<input name="lng" inputMode="decimal" required /></label>
       </div>
-      <button type="button" className="ghost" onClick={useMyLocation}>Use my current location</button>
+      <LocationButton label="Use my current location as the venue" />
       <fieldset>
         <legend>Co-host houses (each must approve)</legend>
         <div className="chips">

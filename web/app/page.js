@@ -4,6 +4,7 @@ import { Event } from '@/lib/models';
 import { getCurrentUser, toJSON } from '@/lib/auth';
 import EventMap from '@/components/EventMapLoader';
 import NearbyPeers from '@/components/NearbyPeers';
+import { formatWhen } from '@/lib/time';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,7 @@ export default async function Home() {
             <Link key={e._id} href={`/events/${e._id}`} className="card">
               <b>{KIND_ICON[e.kind]} {e.title}</b>
               <span>{e.city} · {e.hostHouses.join(' × ')} · {e.points} pts</span>
-              <span>{new Date(e.startsAt).toLocaleString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })}</span>
+              <span>{formatWhen(e.startsAt)}</span>
             </Link>
           ))}
           <h2>Peers near you</h2>

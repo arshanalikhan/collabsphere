@@ -34,8 +34,8 @@ a { color: var(--deep); font-weight: 700; }
 .brand-mark { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--sun); border: var(--line); font-size: 20px; }
 .brand b { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; display: block; line-height: 1; }
 .brand small { font-family: var(--font-hand); color: var(--moss); font-size: .95rem; }
-.nav nav { display: flex; gap: 2px; flex: 1 1 320px; flex-wrap: wrap; padding: 4px; border: var(--line); border-radius: 999px; background: var(--cream); box-shadow: var(--pop-sm); max-width: max-content; }
-.nav nav a { font-family: var(--font-display); font-weight: 800; font-size: .95rem; padding: 6px 14px; border-radius: 999px; color: var(--ink); text-decoration: none; border: 2px solid transparent; }
+.nav nav { display: flex; gap: 2px; flex: 0 1 auto; flex-wrap: nowrap; padding: 4px; border: var(--line); border-radius: 999px; background: var(--cream); box-shadow: var(--pop-sm); max-width: max-content; }
+.nav nav a { font-family: var(--font-display); font-weight: 800; font-size: .95rem; padding: 6px 14px; white-space: nowrap; border-radius: 999px; color: var(--ink); text-decoration: none; border: 2px solid transparent; }
 .nav nav a:hover { background: var(--accent); }
 .nav nav a.active { background: var(--sun); border-color: var(--ink); }
 .nav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-wrap: wrap; }
@@ -115,6 +115,7 @@ a.card:hover { transform: translate(-2px, -2px); box-shadow: var(--pop); }
   padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; cursor: pointer; }
 .chip:has(input:checked) { background: var(--lime); }
 .chip input { accent-color: var(--moss); width: 16px; height: 16px; }
+.locate { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
 /* ---------- Event / QR ---------- */
 .event-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 10px 0 16px; }

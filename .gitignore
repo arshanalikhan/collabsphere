@@ -6,3 +6,5 @@ dist
 *.jpeg
 .claude/
 *.log
+.agents/
+skills-lock.json

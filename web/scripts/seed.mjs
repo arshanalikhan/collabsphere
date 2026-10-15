@@ -17,17 +17,25 @@ const [admin, coord, kazAdmin] = await User.create([
   { uid: 'wayanad-1', name: 'Wayanad Member', house: 'Wayanad', city: 'Kochi', location: pt(76.27, 9.93), points: 18 },
 ]);
 
-const soon = (days) => new Date(Date.now() + days * 864e5);
+// Demo events at sensible IST wall-clock times, relative to the day the seed runs
+const IST = 330 * 6e4;
+const at = (days, hour) => {
+  const d = new Date(Date.now() + IST);
+  d.setUTCDate(d.getUTCDate() + days);
+  d.setUTCHours(hour, 0, 0, 0);
+  return new Date(d.getTime() - IST);
+};
+const sunday = (7 - new Date(Date.now() + IST).getUTCDay()) % 7 || 7;
 await Event.create([
   { title: 'Lucknow Co-working Sunday', kind: 'coworking', hostHouses: ['Saranda'], proposedBy: coord._id, status: 'approved',
     approvals: [{ house: 'Saranda', by: admin._id, at: new Date() }], city: 'Lucknow', venue: 'Hazratganj Cafe',
-    location: pt(80.946, 26.85), startsAt: soon(2), endsAt: soon(2.1), points: 10, requireFace: true,
+    location: pt(80.946, 26.85), startsAt: at(sunday, 10), endsAt: at(sunday, 13), points: 10, requireFace: true,
     description: 'Bring your laptop, finish your weekly assignments together.' },
   { title: 'Chennai Campus Meetup', kind: 'meetup', hostHouses: ['Saranda', 'Kaziranga'], proposedBy: admin._id, status: 'approved',
     approvals: [{ house: 'Saranda', by: admin._id, at: new Date() }, { house: 'Kaziranga', by: kazAdmin._id, at: new Date() }],
-    city: 'Chennai', venue: 'IIT Madras Research Park', location: pt(80.243, 12.99), startsAt: soon(4), points: 20 },
+    city: 'Chennai', venue: 'IIT Madras Research Park', location: pt(80.243, 12.99), startsAt: at(4, 17), points: 20 },
   { title: 'UP Regional Meetup x Kaziranga', kind: 'joint-event', hostHouses: ['Saranda', 'Kaziranga'], proposedBy: coord._id,
-    status: 'proposed', city: 'Kanpur', venue: 'Phoolbagh', location: pt(80.33, 26.47), startsAt: soon(6), points: 25 },
+    status: 'proposed', city: 'Kanpur', venue: 'Phoolbagh', location: pt(80.33, 26.47), startsAt: at(6, 16), points: 25 },
 ]);
 
 console.log('Seeded.');

@@ -2,6 +2,10 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { HOUSES } from '@/lib/houses';
 import { updateProfile } from '@/app/actions';
+import LocationButton from '@/components/LocationButton';
+import SubmitButton from '@/components/SubmitButton';
+
+export const metadata = { title: 'Your profile' };
 
 export default async function ProfilePage() {
   const me = await getCurrentUser();
@@ -21,8 +25,9 @@ export default async function ProfilePage() {
         <label>Latitude<input name="lat" defaultValue={lat} /></label>
         <label>Longitude<input name="lng" defaultValue={lng} /></label>
       </div>
+      <LocationButton digits={2} />
       <p className="muted">Location is rounded to about 1 km. Peers only ever see your city.</p>
-      <button>Save</button>
+      <SubmitButton />
     </form>
   );
 }

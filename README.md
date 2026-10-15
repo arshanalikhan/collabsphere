@@ -2,7 +2,9 @@
 
 Cross-house and regional meetup engine for IITM BS houses: discover nearby peers, propose and co-host events across houses, and earn house points through proof-of-presence check-ins.
 
-**Stack:** Next.js 15 (App Router: Server Components, Route Handlers, Server Actions) · MongoDB + Mongoose · Leaflet/OpenStreetMap · deployable as a single app on Vercel
+**Live:** https://collabsphere-one.vercel.app (demo mode is on: switch users with the dropdown in the top right)
+
+**Stack:** Next.js 15 (App Router: Server Components, Route Handlers, Server Actions) · MongoDB + Mongoose · Leaflet/OpenStreetMap · deployed as a single app on Vercel (Mumbai, `bom1`) with MongoDB Atlas
 
 ## Run locally
 Needs MongoDB, either local or an Atlas URI in `web/.env.local`.
@@ -47,6 +49,7 @@ web/
 - **Proof of presence:** the host screen shows an HMAC-signed QR token that rotates every 30 s, so screenshots can't be reused. The server also checks the attendee is within 500 m of the venue and allows only one check-in per person per event. Admins can revoke a check-in, which reverses the points.
 - **Privacy:** user location is rounded to about 1 km, and peers only see each other's city.
 - **Scoped admin:** admins see and manage only their own house's members and events.
+- **One timezone:** event times are shown and entered in IST everywhere, so the UTC server and students' browsers always agree.
 
 ## Demo flow
 1. `lucknow-coord`: Propose an event with Kaziranga as co-host.
@@ -60,4 +63,5 @@ web/
 - [x] Admin dashboard (approvals, event editing, member roles/points, check-in audit)
 - [x] Optional face check during check-in, per event (MediaPipe in the browser: one face, head turn, back to centre; thumbnail kept for the host audit and deleted after 30 days). Try it at `/facecheck-demo` in demo mode.
 - [x] Google sign-in (Auth.js), with an IITM domain restriction and admin bootstrap from env
-- [ ] Saranda visual polish, deploy to Vercel + MongoDB Atlas, demo video
+- [x] Deploy to Vercel + MongoDB Atlas
+- [ ] Saranda visual polish, demo video

@@ -4,12 +4,13 @@ import { connectDB } from '@/lib/db';
 import { Event, User, CheckIn, purgeOldSelfies, SELFIE_RETENTION_DAYS } from '@/lib/models';
 import { getCurrentUser } from '@/lib/auth';
 import { ROLES } from '@/lib/houses';
+import { formatWhen, toISTInput } from '@/lib/time';
 import { adminApprove, adminReject, adminUpdateEvent, adminUpdateUser, adminRevokeCheckIn } from '@/app/actions';
 
 export const dynamic = 'force-dynamic';
+export const metadata = { title: 'Admin' };
 
 const TABS = ['approvals', 'events', 'members', 'check-ins'];
-const toLocalInput = (d) => (d ? new Date(new Date(d).getTime() - new Date(d).getTimezoneOffset() * 6e4).toISOString().slice(0, 16) : '');
 
 export default async function AdminPage({ searchParams }) {
   const me = await getCurrentUser();
@@ -55,7 +56,7 @@ export default async function AdminPage({ searchParams }) {
             return (
               <div key={e._id} className="card">
                 <b>{e.title}</b>
-                <span>{e.kind} · {e.city} · {new Date(e.startsAt).toLocaleString('en-IN')} · by {e.proposedBy?.name}</span>
+                <span>{e.kind} · {e.city} · {formatWhen(e.startsAt)} · by {e.proposedBy?.name}</span>
                 <span>Hosts: {e.hostHouses.map((h) => `${h}${approved.includes(h) ? ' ✓' : ' …'}`).join(' × ')}</span>
                 {!approved.includes(house) && (
                   <div className="row">
@@ -72,7 +73,7 @@ export default async function AdminPage({ searchParams }) {
       {tab === 'events' && (
         <section className="table-wrap">
           <table>
-            <thead><tr><th>Title</th><th>Venue</th><th>Starts</th><th>Pts</th><th>RSVPs</th><th /></tr></thead>
+            <thead><tr><th>Title</th><th>Venue</th><th>Starts (IST)</th><th>Pts</th><th>RSVPs</th><th /></tr></thead>
             <tbody>
               {events.map((e) => (
                 <tr key={e._id}>
@@ -81,7 +82,7 @@ export default async function AdminPage({ searchParams }) {
                       <input type="hidden" name="id" value={String(e._id)} />
                       <input name="title" defaultValue={e.title} aria-label="Title" />
                       <input name="venue" defaultValue={e.venue} aria-label="Venue" />
-                      <input type="datetime-local" name="startsAt" defaultValue={toLocalInput(e.startsAt)} aria-label="Starts at" />
+                      <input type="datetime-local" name="startsAt" defaultValue={toISTInput(e.startsAt)} aria-label="Starts at" />
                       <input type="number" name="points" defaultValue={e.points} aria-label="Points" className="narrow" />
                       <label className="chip"><input type="checkbox" name="requireFace" defaultChecked={e.requireFace} /> Face check</label>
                       <span>{e.rsvps.length} RSVPs</span>
@@ -131,7 +132,7 @@ export default async function AdminPage({ searchParams }) {
               {!myCheckIns.length && <tr><td colSpan={6} className="muted">No check-ins yet.</td></tr>}
               {myCheckIns.map((c) => (
                 <tr key={c._id} className={c.revoked ? 'revoked' : ''}>
-                  <td>{new Date(c.createdAt).toLocaleString('en-IN')}</td>
+                  <td>{formatWhen(c.createdAt)}</td>
                   <td>{c.user?.name} ({c.user?.house})</td>
                   <td>{c.event?.title}</td>
                   <td>{Math.round(c.distanceM)} m</td>

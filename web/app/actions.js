@@ -8,6 +8,7 @@ import { requireUser, DEV_USERS, devAuthEnabled } from '@/lib/auth';
 import { signOut } from '@/auth';
 import { approveEvent, rejectEvent } from '@/lib/events';
 import { HOUSES, ROLES } from '@/lib/houses';
+import { parseIST } from '@/lib/time';
 
 // Demo mode only: impersonate a seeded user, or '' to fall back to the Google session
 export async function switchDevUser(uid) {
@@ -44,7 +45,7 @@ export async function adminUpdateEvent(formData) {
   event.title = formData.get('title');
   event.venue = formData.get('venue');
   event.points = Number(formData.get('points'));
-  event.startsAt = new Date(formData.get('startsAt'));
+  event.startsAt = parseIST(formData.get('startsAt'));
   event.requireFace = formData.get('requireFace') === 'on';
   await event.save();
   revalidatePath('/admin');

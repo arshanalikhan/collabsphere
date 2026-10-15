@@ -1,6 +1,8 @@
 import { connectDB } from '@/lib/db';
 import { Event } from '@/lib/models';
-import { handle, requireUser } from '@/lib/auth';
+import { handle, requireUser, HttpError } from '@/lib/auth';
+import { HOUSES, EVENT_KINDS } from '@/lib/houses';
+import { parseIST } from '@/lib/time';
 
 export const GET = handle(async (req) => {
   await connectDB();
@@ -11,12 +13,21 @@ export const GET = handle(async (req) => {
 export const POST = handle(async (req) => {
   const user = await requireUser('coordinator', 'admin');
   const { lng, lat, hostHouses = [], title, description, kind, city, venue, startsAt, endsAt, points, requireFace } = await req.json();
+  const [x, y] = [Number(lng), Number(lat)];
+  const starts = parseIST(startsAt);
+  if (!title?.trim() || !city?.trim()) throw new HttpError(400, 'Title and city are required');
+  if (!(Math.abs(y) <= 90 && Math.abs(x) <= 180) || lat === '' || lng === '') throw new HttpError(400, 'Enter a valid latitude and longitude');
+  if (!starts || isNaN(starts)) throw new HttpError(400, 'Enter a valid start time');
+  if (starts < Date.now()) throw new HttpError(400, 'Start time is in the past');
+  if (kind && !EVENT_KINDS.includes(kind)) throw new HttpError(400, 'Unknown event type');
+
   const event = await Event.create({
-    title, description, kind, city, venue, startsAt, endsAt, points,
+    title: title.trim(), description, kind, city: city.trim(), venue, startsAt: starts, endsAt: parseIST(endsAt),
+    points: Math.min(100, Math.max(0, Number(points) || 0)),
     requireFace: requireFace === true || requireFace === 'on',
-    hostHouses: [...new Set([user.house, ...hostHouses])],
+    hostHouses: [...new Set([user.house, ...hostHouses.filter((h) => HOUSES.includes(h))])],
     proposedBy: user._id,
-    location: { type: 'Point', coordinates: [Number(lng), Number(lat)] },
+    location: { type: 'Point', coordinates: [x, y] },
   });
   return Response.json(event, { status: 201 });
 });
