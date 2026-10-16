@@ -8,3 +8,4 @@ dist
 *.log
 .agents/
 skills-lock.json
+HANDOFF.md

@@ -1,6 +1,6 @@
 /* Design tokens mirror the Saranda Build-a-Thon site */
 :root {
-  --ink: #23302a; --paper: #fff4df; --cream: #fffbf2; --leaf: #7cc46a; --lime: #b8e07a; --moss: #3f8f5b; --deep: #2e6b47;
+  --ink: #23302a; --paper: #fff4df; --cream: #fffbf2; --leaf: #7cc46a; --lime: #b8e07a; --moss: #33774b; --deep: #2e6b47;
   --sun: #ffc93c; --coral: #ff7b5c; --sky: #9ad8ec; --pink: #ffa9a0; --berry: #7e5bd6; --sand: #f6e7c8; --accent: #eaf6d9;
   --muted: #5b6b61; --danger: #c43d27;
   --line: 3px solid var(--ink); --pop: 5px 5px 0 var(--ink); --pop-sm: 3px 3px 0 var(--ink); --pop-lg: 8px 8px 0 var(--ink);
@@ -88,7 +88,7 @@ a.card:hover { transform: translate(-2px, -2px); box-shadow: var(--pop); }
 .card b { font-family: var(--font-display); font-size: 1.08rem; font-weight: 800; }
 .card span { color: var(--muted); font-size: .9rem; }
 .badge { display: inline-block; padding: 2px 12px; border: 2px solid var(--ink); border-radius: 999px; font-family: var(--font-display); font-size: .8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; margin: 0 6px 8px 0; }
-.badge.approved { background: var(--lime); } .badge.proposed { background: var(--sun); } .badge.rejected { background: var(--pink); }
+.badge.approved { background: var(--lime); } .badge.proposed { background: var(--sun); } .badge.rejected { background: var(--pink); } .badge.cancelled { background: #e4e0d6; }
 .badge.meetup { background: var(--sky); } .badge.coworking { background: var(--accent); } .badge.joint-event { background: #d9cdf6; }
 
 /* ---------- Home ---------- */
@@ -99,6 +99,7 @@ a.card:hover { transform: translate(-2px, -2px); box-shadow: var(--pop); }
 .grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 .grid aside h2 { margin-top: 4px; }
 .grid aside h2 + * { margin-top: 0; }
+.map-legend { margin: 10px 4px 0; font-size: .85rem; }
 .map { height: min(70vh, 620px); border: var(--line); border-radius: var(--radius); box-shadow: var(--pop); z-index: 0; }
 .skeleton { background: repeating-linear-gradient(45deg, #f6e7c8, #f6e7c8 12px, #fbefd6 12px, #fbefd6 24px); }
 .pin { font-size: 26px; filter: drop-shadow(2px 2px 0 var(--ink)); }
@@ -117,9 +118,23 @@ a.card:hover { transform: translate(-2px, -2px); box-shadow: var(--pop); }
 .chip input { accent-color: var(--moss); width: 16px; height: 16px; }
 .locate { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
+/* ---------- Profile ---------- */
+.stack { display: flex; flex-direction: column; gap: 24px; }
+.stack > .panel { width: 100%; }
+.panel h3 { margin-top: 18px; }
+.field-static { display: flex; flex-direction: column; gap: 6px; margin: 0; }
+.field-static span { padding: 10px 12px; border: 2px dashed rgba(35, 48, 42, .35); border-radius: var(--radius-sm); }
+.form label small { font-weight: 400; }
+.badges { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 10px; }
+.badges li { display: flex; flex-direction: column; padding: 8px 14px; border: var(--line); border-radius: var(--radius-sm); background: #fff; box-shadow: var(--pop-sm);
+  font-family: var(--font-display); font-weight: 800; }
+.badges small { font-family: var(--font-body); font-weight: 600; color: var(--muted); font-size: .8rem; }
+
 /* ---------- Event / QR ---------- */
 .event-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 10px 0 16px; }
 .event-meta span { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.event-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.event-actions .btn.ghost { font-size: .9rem; padding: 8px 14px; }
 .qr { margin-top: 24px; text-align: center; padding: 18px; border: 3px dashed var(--ink); border-radius: var(--radius); background: #fff; }
 .qr svg { padding: 12px; border: var(--line); border-radius: var(--radius-sm); background: #fff; }
 
@@ -133,6 +148,7 @@ a.card:hover { transform: translate(-2px, -2px); box-shadow: var(--pop); }
 .board b { font-family: var(--font-display); font-size: 1.1rem; }
 .bar { height: 14px; background: var(--leaf); border: 2px solid var(--ink); border-radius: 999px; width: var(--w); min-width: 6px; }
 .board .pts { font-size: .9rem; color: var(--muted); white-space: nowrap; }
+.board.compact li { grid-template-columns: 40px 1fr auto auto; background: #fff; box-shadow: none; }
 @media (max-width: 560px) { .board li { grid-template-columns: 34px 1fr auto; } .bar { display: none; } }
 
 /* ---------- Admin ---------- */
@@ -154,6 +170,12 @@ th, td { padding: 10px 12px; text-align: left; border-bottom: 2px dashed rgba(35
 .inline-form input, .inline-form select { padding: 6px 10px; border-width: 2px; }
 .narrow { width: 84px; }
 tr.revoked { opacity: .5; text-decoration: line-through; }
+tr.cancelled td > form { opacity: .55; }
+.row-actions { margin-top: 8px; gap: 14px; font-size: .9rem; }
+.row-actions form { margin: 0; }
+.attendees { max-width: none; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.attendees .table-wrap { width: 100%; box-shadow: none; }
+.attendees .back { font-size: .9rem; }
 .table-note { padding: 10px 12px 0; margin: 0; }
 .selfie { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid var(--ink); }
 .selfie.big { width: 120px; height: 120px; border-width: 3px; box-shadow: var(--pop-sm); }

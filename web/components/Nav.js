@@ -19,7 +19,7 @@ export default function Nav({ me, devUsers }) {
 
   return (
     <header className="nav">
-      <Link href="/" className="brand" aria-label="CollabSphere home">
+      <Link href="/" className="brand">
         <span className="brand-mark" aria-hidden>🌿</span>
         <span><b>CollabSphere</b><small>by Saranda House</small></span>
       </Link>

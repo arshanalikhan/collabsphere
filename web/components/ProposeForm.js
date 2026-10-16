@@ -46,6 +46,9 @@ export default function ProposeForm({ houses }) {
         <label>Longitude<input name="lng" inputMode="decimal" required /></label>
       </div>
       <LocationButton label="Use my current location as the venue" />
+      <label>Partner societies or clubs (optional)
+        <input name="partners" placeholder="e.g. Coding Club, Music Society" />
+      </label>
       <fieldset>
         <legend>Co-host houses (each must approve)</legend>
         <div className="chips">

@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "seed": "node --env-file=.env.local scripts/seed.mjs"
+    "seed": "node --env-file=.env.local scripts/seed.mjs",
+    "test": "node --test tests/unit.test.mjs",
+    "test:e2e": "node tests/e2e.mjs",
+    "demo:refresh": "node --env-file=.env.local scripts/refresh-demo-dates.mjs"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^1.1.0",

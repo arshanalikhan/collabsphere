@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { HOUSES, ROLES, EVENT_KINDS } from './houses.js';
+import { HOUSES, HOUSE_OPTIONS, NO_HOUSE, ROLES, EVENT_KINDS, EVENT_STATUSES } from './houses.js';
 
 // Optional GeoJSON point: left unset (not empty) until a location is known, since 2dsphere rejects empty points
 const pointSchema = new mongoose.Schema(
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   uid: { type: String, required: true, unique: true },
   name: String,
   email: String,
-  house: { type: String, enum: HOUSES, default: 'Saranda' },
+  house: { type: String, enum: HOUSE_OPTIONS, default: NO_HOUSE },
   role: { type: String, enum: ROLES, default: 'member' },
   city: String,
   // City-level location only, never exact coordinates, for privacy
@@ -27,8 +27,10 @@ const eventSchema = new mongoose.Schema({
   description: String,
   kind: { type: String, enum: EVENT_KINDS, default: 'meetup' },
   hostHouses: [{ type: String, enum: HOUSES }],
+  // Societies/clubs co-hosting with the houses (shown on the event; approvals stay with the host houses)
+  partners: [String],
   proposedBy: { type: ObjectId, ref: 'User' },
-  status: { type: String, enum: ['proposed', 'approved', 'rejected'], default: 'proposed' },
+  status: { type: String, enum: EVENT_STATUSES, default: 'proposed' },
   approvals: [{ house: String, by: { type: ObjectId, ref: 'User' }, at: Date }],
   city: String,
   venue: String,
