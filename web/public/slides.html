@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CollabSphere · Slides</title>
+<style>
+  :root { --ink:#23302a; --paper:#fff4df; --cream:#fffbf2; --moss:#33774b; --sun:#ffc93c; --lime:#b8e07a; --sky:#9ad8ec; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, "Segoe UI", sans-serif; color:var(--ink); background:var(--paper); }
+  .slide { min-height:100vh; padding:6vh 7vw; display:flex; flex-direction:column; justify-content:center; border-bottom:3px solid var(--ink); }
+  .slide:nth-child(even) { background:var(--cream); }
+  h1 { font-size:clamp(2.2rem,6vw,4.2rem); margin:0 0 .3em; }
+  h2 { font-size:clamp(1.6rem,4vw,2.6rem); margin:0 0 .6em; }
+  p, li { font-size:clamp(1rem,2.2vw,1.35rem); line-height:1.55; }
+  ul { padding-left:1.2em; margin:0; } li { margin:.35em 0; }
+  .tag { display:inline-block; background:var(--sun); border:3px solid var(--ink); border-radius:999px; padding:4px 16px; font-weight:800; margin-bottom:18px; width:max-content; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+  .card { background:#fff; border:3px solid var(--ink); border-radius:18px; padding:18px 20px; box-shadow:5px 5px 0 var(--ink); }
+  .card b { display:block; font-size:1.15rem; margin-bottom:6px; }
+  .card p { font-size:1rem; margin:0; }
+  a { color:var(--moss); font-weight:800; }
+  .big { font-size:clamp(1.2rem,3vw,1.8rem); }
+  table { border-collapse:collapse; width:100%; background:#fff; border:3px solid var(--ink); }
+  td, th { border-bottom:2px dashed #b9b2a2; padding:10px 14px; text-align:left; font-size:clamp(.95rem,2vw,1.15rem); }
+  th { background:var(--lime); }
+  .hint { position:fixed; right:14px; bottom:12px; font-size:.85rem; opacity:.7; }
+</style>
+</head>
+<body>
+
+<section class="slide">
+  <span class="tag">Saranda Build-a-Thon ’26 · Theme 02</span>
+  <h1>🌿 CollabSphere</h1>
+  <p class="big">A cross-house and regional meetup engine for IITM BS students.<br>Find peers near you, co-host meetups across houses, and prove you showed up.</p>
+  <p>Live: <a href="https://collabsphere-one.vercel.app">collabsphere-one.vercel.app</a> · Code: <a href="https://github.com/arshanalikhan/collabsphere">github.com/arshanalikhan/collabsphere</a><br>By Arshan Ali Khan</p>
+</section>
+
+<section class="slide">
+  <h2>The problem</h2>
+  <ul>
+    <li>IITM BS students are spread across cities and countries, so in-person meetups are rare and hard to organise.</li>
+    <li>Cross-house events run on WhatsApp threads and Google Forms, with no shared calendar and no approval trail.</li>
+    <li>Nobody can verify who actually attended, so showing up earns no recognition for the student or their house.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>What CollabSphere does</h2>
+  <div class="grid">
+    <div class="card"><b>🗺️ Regional map</b><p>Live meetups and co-working sessions as pins, plus students as one bubble per city (counts only, so locations stay private).</p></div>
+    <div class="card"><b>🤝 Joint-event host manager</b><p>Propose events with co-host houses and partner societies. An event goes live only when every host house approves.</p></div>
+    <div class="card"><b>📍 Proof of presence</b><p>Rotating signed QR (30 s), 500 m geofence, one check-in per person, optional in-browser liveness face check.</p></div>
+    <div class="card"><b>🏆 Recognition</b><p>House points and leaderboard, top members, profile badges and attendance history.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>The full event lifecycle</h2>
+  <ol class="big">
+    <li>Coordinator proposes an event (venue from GPS, co-host houses, partner societies)</li>
+    <li>An admin from every host house approves; then it appears on the map</li>
+    <li>Students RSVP, add it to Google Calendar / .ics, share on WhatsApp, get directions</li>
+    <li>On the day: host shows the rotating QR, attendees scan it at the venue</li>
+    <li>Points go to the house; admins export attendance and can revoke check-ins</li>
+  </ol>
+</section>
+
+<section class="slide">
+  <h2>Admin workflows</h2>
+  <ul>
+    <li><b>Approvals queue</b> showing which host houses have approved</li>
+    <li><b>Events:</b> inline edit (title, venue, IST time, points, face check, partners), cancel / restore</li>
+    <li><b>Attendees</b> per event with one-click <b>CSV export</b></li>
+    <li><b>Members:</b> roles, moving between houses, point adjustments</li>
+    <li><b>Check-in audit</b> with selfie thumbnails; revoking reverses the points</li>
+    <li>Every admin sees and manages only their own house</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Technical architecture</h2>
+  <div class="grid">
+    <div class="card"><b>Next.js 15 App Router</b><p>Server Components read MongoDB directly; Server Actions for admin and profile; Route Handlers for the JSON, .ics and CSV APIs.</p></div>
+    <div class="card"><b>Data & auth</b><p>MongoDB Atlas + Mongoose with 2dsphere geo queries. Auth.js Google sign-in limited to IITM domains, roles and house scoping on every route.</p></div>
+    <div class="card"><b>Security</b><p>HMAC-signed rotating QR, geofence, idempotent approvals, input validation, privacy-rounded locations, 30-day selfie purge.</p></div>
+    <div class="card"><b>Quality</b><p>Unit tests + a 37-check end-to-end lifecycle test, run in GitHub Actions CI on every push.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>How it scores on the rubric</h2>
+  <table>
+    <tr><th>Criterion</th><th>CollabSphere</th></tr>
+    <tr><td>Technical Architecture 30%</td><td>App Router throughout (RSC, Server Actions, Route Handlers), clean lib/ modules, tests + CI</td></tr>
+    <tr><td>Relevance & Utility 30%</td><td>Covers every Theme 02 idea end to end; Google sign-in for IITM; deployed and usable today</td></tr>
+    <tr><td>UI/UX & Performance 20%</td><td>Mobile-first; Lighthouse accessibility 100, performance 93 mobile / 99 desktop</td></tr>
+    <tr><td>Admin Usability 20%</td><td>Approvals, edit/cancel, attendees + CSV, members, check-in audit with revoke</td></tr>
+  </table>
+</section>
+
+<section class="slide">
+  <h2>Try it now</h2>
+  <p class="big">Open <a href="https://collabsphere-one.vercel.app">collabsphere-one.vercel.app</a> and use the dropdown at the top right (no password):</p>
+  <ul>
+    <li><b>saranda-admin</b> / <b>kaziranga-admin</b>: Admin dashboard and approvals</li>
+    <li><b>lucknow-coord</b>: propose an event, show the rotating check-in QR</li>
+    <li><b>member-1</b>: map, RSVP, check in, badges</li>
+  </ul>
+  <p>Walkthrough and setup: <a href="https://github.com/arshanalikhan/collabsphere#for-judges-try-it-in-3-minutes">README on GitHub</a></p>
+  <p class="big">Thank you! 🌿</p>
+</section>
+
+<div class="hint">Scroll or use ↓ / PageDown</div>
+<script>
+  document.addEventListener('keydown', (e) => {
+    const s = [...document.querySelectorAll('.slide')], y = scrollY + 5;
+    const i = s.findIndex((el) => el.offsetTop + el.offsetHeight > y);
+    if (['ArrowRight', ' '].includes(e.key)) { e.preventDefault(); s[Math.min(i + 1, s.length - 1)].scrollIntoView({ behavior: 'smooth' }); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); s[Math.max(i - 1, 0)].scrollIntoView({ behavior: 'smooth' }); }
+  });
+</script>
+</body>
+</html>
