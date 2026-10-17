@@ -4,7 +4,7 @@
 
 A cross-house and regional meetup engine for IITM BS houses. Students find peers near them, houses (with societies) propose and co-host meetups, and attendees prove they showed up with a rotating QR code and an optional face check, earning points for their house.
 
-**Live:** https://collabsphere-one.vercel.app · **Slides:** https://collabsphere-one.vercel.app/slides.html
+**Live:** https://collabsphere-one.vercel.app · **Slides:** https://collabsphere-one.vercel.app/slides.html · **Demo video:** https://collabsphere-one.vercel.app/demo.webm
 
 **Stack:** Next.js 15 App Router (Server Components, Server Actions, Route Handlers) · MongoDB Atlas + Mongoose · Leaflet/OpenStreetMap · Auth.js (Google) · MediaPipe (in-browser face check) · Vercel (Mumbai, `bom1`)
 
