@@ -41,28 +41,51 @@ The face check runs on its own at `/facecheck-demo`.
 ## Architecture
 ```mermaid
 flowchart LR
-  subgraph Browser
-    RSC[Server-rendered pages]
-    CC[Client components<br/>map · QR scanner · face check · forms]
+  subgraph client["Browser (mobile-first)"]
+    pages["Server-rendered pages"]
+    cc["Client components<br/>map · QR scanner<br/>face check · forms"]
   end
-  subgraph Next.js on Vercel
-    SC[Server Components<br/>read MongoDB directly]
-    SA[Server Actions<br/>admin + profile mutations]
-    RH[Route Handlers /api<br/>events · approve · RSVP · QR · check-in · ics · CSV]
-    LIB[lib/<br/>auth & roles · approvals · QR HMAC · IST time · badges · calendar]
+  subgraph app["Next.js App Router"]
+    rsc["Server Components<br/>read MongoDB directly"]
+    sa["Server Actions<br/>admin + profile changes"]
+    api["Route Handlers /api<br/>events · approve · RSVP<br/>QR · check-in · ics · CSV"]
+    lib["lib/<br/>auth and roles · approvals<br/>QR HMAC · IST time<br/>badges · calendar"]
   end
-  DB[(MongoDB Atlas)]
-  G[Google OAuth]
-  RSC --> SC
-  CC --> RH
-  CC --> SA
-  SC --> LIB
-  SA --> LIB
-  RH --> LIB
-  LIB --> DB
-  SC -. Auth.js .-> G
+  db[("MongoDB Atlas<br/>users · events · check-ins<br/>2dsphere geo indexes")]
+  google["Google OAuth<br/>IITM accounts only"]
+  pages --> rsc
+  cc --> api
+  cc --> sa
+  rsc --> lib
+  sa --> lib
+  api --> lib
+  lib --> db
+  rsc -.->|"Auth.js session"| google
 ```
 
+### Event lifecycle: from proposal to verified check-in
+```mermaid
+sequenceDiagram
+  autonumber
+  actor C as Coordinator
+  actor A as Host-house admins
+  actor M as Member on phone
+  participant S as CollabSphere
+  participant DB as MongoDB
+  C->>S: Propose event (venue, co-host houses, partner societies)
+  S->>DB: Save as proposed
+  A->>S: Approve, one admin per host house
+  S->>DB: Mark approved once every host house has approved
+  M->>S: RSVP, add to calendar, share on WhatsApp
+  C->>S: Open the host screen on event day
+  S-->>C: QR token = eventId.slot.HMAC, rotates every 30 s
+  M->>S: Scan QR + GPS location (+ liveness selfie if required)
+  S->>S: Check signature and time slot, distance under 500 m, one per person
+  S->>DB: Save check-in, add points for the member's house
+  A->>S: Audit or revoke (points reversed), export attendance CSV
+```
+
+### Code layout
 ```
 web/
   app/
@@ -79,6 +102,7 @@ web/
   lib/                    db, models, auth/roles, approvals, QR signing, IST time, badges, calendar
   components/             Client components
   scripts/                seed.mjs (demo data), refresh-demo-dates.mjs
+  public/                 slides.html (presentation), demo.webm (demo video)
   tests/                  unit.test.mjs (node:test), e2e.mjs (full lifecycle against a running app)
 ```
 
